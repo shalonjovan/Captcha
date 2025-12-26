@@ -27,7 +27,7 @@ noise_w = FRAME_W * NOISE_SCALE
 base_noise = np.random.randint(
     0, 255, (noise_h, noise_w), dtype=np.uint8
 )
-base_noise = cv2.GaussianBlur(base_noise, (5, 5), 0)
+# base_noise = cv2.GaussianBlur(base_noise, (5, 5), 0)
 
 # ---------------- TEXT MASK ----------------
 text_mask = np.zeros((FRAME_H, FRAME_W), dtype=np.uint8)
@@ -54,7 +54,7 @@ cv2.putText(
 text_noise = np.random.randint(
     0, 256, (FRAME_H, FRAME_W), dtype=np.uint8
 )
-text_noise = cv2.GaussianBlur(text_noise, (3, 3), 0)
+# text_noise = cv2.GaussianBlur(text_noise, (3, 3), 0)
 
 # Apply mask
 text_texture = cv2.bitwise_and(text_noise, text_mask)
