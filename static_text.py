@@ -6,18 +6,18 @@ import math
 import time
 
 # ---------------- CONFIG ----------------
-FRAME_W, FRAME_H = 400, 150
+FRAME_W, FRAME_H = 550, 150
 NOISE_SCALE = 10
 SPEED_X, SPEED_Y = 1, 0
 FPS = 30
 
 TEXT_LEN = 6
 FONT = cv2.FONT_HERSHEY_DUPLEX
-FONT_SCALE = 2
-FONT_THICKNESS = 4   # 5 was too aggressive with noise
+FONT_SCALE = 3
+FONT_THICKNESS = 5   # 5 was too aggressive with noise
 
 MAX_ROTATION = 15
-MAX_SPACING = 4
+MAX_SPACING = 2
 
 BOUNCE_AMPLITUDE = 8
 BOUNCE_SPEED = 2.0
@@ -115,7 +115,12 @@ for i, ch in enumerate(captcha_text):
 x = y = 0
 start_time = time.time()
 
-cv2.namedWindow("captcha", cv2.WINDOW_NORMAL)
+cv2.namedWindow("captcha", cv2.WINDOW_AUTOSIZE)
+# cv2.setWindowProperty(
+#     "captcha",
+#     cv2.WND_PROP_FULLSCREEN,
+#     cv2.WINDOW_FULLSCREEN
+# )
 
 while True:
     t = time.time() - start_time
