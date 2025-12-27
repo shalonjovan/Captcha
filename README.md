@@ -23,6 +23,35 @@ The output can be exported as **GIF or MP4**, or used directly as frames.
 
 ---
 
+## Configuration Options
+
+Captcha(
+    captcha_type="noise",        # "noise" or "text"
+    frame_size=(500, 160),
+    fps=30,
+    duration=4.0,
+
+    font_scale=2.5,
+    font_thickness=2,
+    max_rotation=15,
+    min_spacing=2,
+    max_spacing=6,
+
+    color_mode="light",          # "light" or "dark"
+
+    bg_spawn_rate=10,
+    bg_speed_min=0.6,
+    bg_speed_max=2.0,
+    initial_bg_count=25,
+
+    export=True,
+    export_format="gif",         # "gif" or "mp4"
+    output_name="captcha",
+
+    captcha_text=None            # None = random
+)
+
+
 ## Installation
 
 Create a virtual environment (recommended):
