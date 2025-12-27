@@ -26,6 +26,7 @@ The output can be exported as **GIF or MP4**, or used directly as frames.
 ## Configuration Options
 
 Captcha(
+
     captcha_type="noise",        # "noise" or "text"
     frame_size=(500, 160),
     fps=30,
@@ -49,6 +50,7 @@ Captcha(
     output_name="captcha",
 
     captcha_text=None            # None = random
+    
 )
 
 
