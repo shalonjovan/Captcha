@@ -31,7 +31,7 @@ class Captcha:
         min_spacing=2,
         max_spacing=6,
 
-        color_mode="light",           # "light" | "dark"
+        color_mode="ligth",           # "light" | "dark"
 
         bg_spawn_rate=10,
         bg_speed_min=0.6,
