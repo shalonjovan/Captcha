@@ -4,11 +4,12 @@ import random
 import string
 import time
 import math
+import imageio
 
 # ---------------- CONFIG ----------------
 FRAME_W, FRAME_H = 500, 160
 FPS = 30
-DURATION = 4  # seconds
+DURATION = 10  # seconds
 
 TEXT_LEN = 6
 FONT = cv2.FONT_HERSHEY_DUPLEX
@@ -30,11 +31,16 @@ MAX_SPACING = 6
 COLOR_MODE = "light"   # "light" or "dark"
 
 if COLOR_MODE == "light":
-    BG_COLOR = 255   # white background
-    FG_COLOR = 0     # black text
+    BG_COLOR = 255   # white
+    FG_COLOR = 0     # black
 else:
-    BG_COLOR = 0     # black background
-    FG_COLOR = 255   # white text
+    BG_COLOR = 0     # black
+    FG_COLOR = 255   # white
+
+# -------- GIF EXPORT --------
+EXPORT_GIF = True
+GIF_NAME = "captcha.gif"
+GIF_FPS = 15
 
 # ---------------- TEXT SET ----------------
 ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -73,7 +79,7 @@ total_width = 0
 for ch in captcha_text:
     char_spacings.append(random.randint(MIN_SPACING, MAX_SPACING))
 
-for i, ch in enumerate(captcha_text):
+for ch in captcha_text:
     (cw, ch_h), baseline = cv2.getTextSize(
         ch, FONT, FONT_SCALE, FONT_THICKNESS
     )
@@ -109,12 +115,14 @@ for i, ch in enumerate(captcha_text):
     )
 
     char_canvases.append(rotated)
-    total_width += rotated.shape[1] + char_spacings[i]
+    total_width += rotated.shape[1] + char_spacings[len(char_canvases) - 1]
 
 # ---------------- MAIN LOOP ----------------
 bg_chars = []
 for _ in range(INITIAL_BG_COUNT):
     bg_chars.append(FloatingChar(initial=True))
+
+gif_frames = []
 
 start = time.time()
 cv2.namedWindow("captcha", cv2.WINDOW_AUTOSIZE)
@@ -124,10 +132,9 @@ while True:
     if t > DURATION:
         break
 
-    # Fill background
     frame = np.ones((FRAME_H, FRAME_W, 3), dtype=np.uint8) * BG_COLOR
 
-    # Continuous spawns
+    # Spawn background chars
     if random.random() < BG_SPAWN_RATE / FPS:
         bg_chars.append(FloatingChar())
 
@@ -181,8 +188,19 @@ while True:
 
         x_cursor += w + char_spacings[i]
 
+    # Show preview
     cv2.imshow("captcha", frame)
+
+    # Collect GIF frames
+    if EXPORT_GIF:
+        gif_frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
     if cv2.waitKey(int(1000 / FPS)) & 0xFF == 27:
         break
 
 cv2.destroyAllWindows()
+
+# ---------------- SAVE GIF ----------------
+if EXPORT_GIF and gif_frames:
+    imageio.mimsave(GIF_NAME, gif_frames, fps=GIF_FPS)
+    print(f"GIF saved as {GIF_NAME}")
