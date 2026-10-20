@@ -1,0 +1,49 @@
+name: Publish (API token)
+
+# Fallback publishing path that uses a PyPI API token instead of trusted
+# publishing. Add a `PYPI_API_TOKEN` repository secret (a token scoped to the
+# `captcha-forge` project) and run this workflow manually.
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: PyPI repository
+        required: false
+        default: pypi
+        type: choice
+        options:
+          - pypi
+          - testpypi
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to ${{ inputs.repository }}
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/captcha-forge
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build twine
+      - name: Build
+        run: python -m build
+      - name: Check
+        run: python -m twine check dist/*
+      - name: Publish
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_REPOSITORY_URL: >-
+            ${{ inputs.repository == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://upload.pypi.org/legacy/' }}
+        run: python -m twine upload --non-interactive dist/*

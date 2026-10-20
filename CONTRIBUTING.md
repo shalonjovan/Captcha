@@ -26,5 +26,8 @@ New challenge types should subclass `BaseGenerator`, register with `@register`,
 validate their options, and return a `CaptchaResult` with a clear answer and
 metadata. See [docs/extending.md](docs/extending.md).
 
+The release process (versioning, tagging, and PyPI publishing) is documented in
+[docs/contributing.md](docs/contributing.md#releasing).
+
 By contributing, you agree that your contributions are licensed under the MIT
 License.

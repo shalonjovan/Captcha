@@ -74,6 +74,33 @@ mkdocs serve
 - Do not include generated images unless they are documentation assets.
 - Be respectful and constructive in reviews.
 
+## Releasing
+
+1. Bump the version in `pyproject.toml` and add a `CHANGELOG.md` entry.
+2. Commit, tag, and push:
+
+   ```bash
+   git tag -a v1.2.3 -m "Release 1.2.3"
+   git push origin main --tags
+   ```
+
+3. Create a GitHub release for the tag. The `Publish` workflow then builds the
+   distributions and uploads them to PyPI with trusted publishing.
+4. Trusted publishing needs a publisher entry in the PyPI account
+   (`shalonjovan`) that trusts:
+   - repository `shalonjovan/Captcha`,
+   - workflow `publish.yml`,
+   - environment `pypi`.
+
+   For a brand-new project, register it as a **pending** publisher on the PyPI
+   account page; the first successful publish creates the project.
+5. If OIDC is unavailable, add a `PYPI_API_TOKEN` repository secret and run the
+   `Publish (API token)` workflow manually.
+
+The documentation site is published by the `Docs` workflow to
+<https://shalonjovan.github.io/Captcha/> on every push to `main` that touches
+the documentation or the package.
+
 ## Security issues
 
 Do not open a public issue for a vulnerability. Follow
