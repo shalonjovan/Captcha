@@ -40,9 +40,6 @@ jobs:
       url: https://pypi.org/p/captcha-forge
     permissions:
       id-token: write
-    # A publisher configured without an environment name does not match this
-    # job, so the fallback job below retries without one.
-    continue-on-error: true
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -51,6 +48,8 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
 
   publish_without_environment:
+    # A trusted publisher registered on PyPI without an environment name does
+    # not match the job above, so retry the upload without an environment.
     name: Publish to PyPI (publisher without environment)
     needs: [build, publish]
     if: ${{ always() && needs.publish.result == 'failure' }}
@@ -63,3 +62,25 @@ jobs:
           name: distributions
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  report:
+    name: Publish result
+    needs: [publish, publish_without_environment]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summarise
+        env:
+          WITH_ENVIRONMENT: ${{ needs.publish.result }}
+          WITHOUT_ENVIRONMENT: ${{ needs.publish_without_environment.result }}
+        run: |
+          if [ "$WITH_ENVIRONMENT" = "success" ] || [ "$WITHOUT_ENVIRONMENT" = "success" ]; then
+            echo "The distributions were uploaded to PyPI."
+            exit 0
+          fi
+          echo "Nothing was uploaded to PyPI."
+          echo "Register a trusted publisher on https://pypi.org/manage/account/publishing/ for"
+          echo "project captcha-forge, owner shalonjovan, repository shalonjovan/Captcha,"
+          echo "workflow publish.yml (environment name: pypi), or add a PYPI_API_TOKEN secret"
+          echo "and run the 'Publish (API token)' workflow."
+          exit 1
