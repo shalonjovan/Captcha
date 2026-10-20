@@ -40,6 +40,23 @@ jobs:
       url: https://pypi.org/p/captcha-forge
     permissions:
       id-token: write
+    # A publisher configured without an environment name does not match this
+    # job, so the fallback job below retries without one.
+    continue-on-error: true
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  publish_without_environment:
+    name: Publish to PyPI (publisher without environment)
+    needs: [build, publish]
+    if: ${{ always() && needs.publish.result == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
