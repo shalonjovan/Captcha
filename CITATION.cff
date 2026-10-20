@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use Captcha Forge in academic work, please cite it."
+title: Captcha Forge
+abstract: "A modern, extensible CAPTCHA generator with nine challenge types, animation, and a typed Python API."
+type: software
+authors:
+  - name: CacCat
+version: 1.0.0
+date-released: 2026-10-20
+license: MIT
+repository-code: "https://github.com/shalonjovan/Captcha"
+url: "https://shalonjovan.github.io/Captcha/"
+keywords:
+  - captcha
+  - computer vision
+  - image generation
+  - security
+  - testing

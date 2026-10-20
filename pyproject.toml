@@ -1,0 +1,140 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "captcha-forge"
+version = "1.0.0"
+description = "A modern, extensible CAPTCHA generator with nine challenge types, animation, and a typed Python API."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [
+  { name = "CacCat" },
+]
+keywords = [
+  "captcha",
+  "opencv",
+  "image-generation",
+  "security",
+  "testing",
+  "bot-detection",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+  "Topic :: Scientific/Engineering :: Image Processing",
+  "Topic :: Security",
+  "Topic :: Software Development :: Testing",
+  "Typing :: Typed",
+]
+dependencies = [
+  "numpy>=1.23",
+  "opencv-python-headless>=4.8",
+  "Pillow>=9.5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2",
+  "mypy>=1.8",
+  "pre-commit>=3.5",
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "ruff>=0.4",
+  "twine>=5.0",
+]
+docs = [
+  "mkdocs-material>=9.5",
+  "mkdocstrings[python]>=0.25",
+]
+
+[project.scripts]
+captcha-forge = "captcha_forge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/shalonjovan/Captcha"
+Documentation = "https://shalonjovan.github.io/Captcha/"
+Repository = "https://github.com/shalonjovan/Captcha"
+Issues = "https://github.com/shalonjovan/Captcha/issues"
+Changelog = "https://github.com/shalonjovan/Captcha/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/captcha_forge"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/tests",
+  "/docs",
+  "/examples",
+  "/scripts",
+  "/README.md",
+  "/CHANGELOG.md",
+  "/CODE_OF_CONDUCT.md",
+  "/CONTRIBUTING.md",
+  "/SECURITY.md",
+  "/CITATION.cff",
+  "/LICENSE",
+  "/Makefile",
+  "/mkdocs.yml",
+  "/pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = ["error::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["captcha_forge"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+src = ["src", "tests", "examples", "scripts"]
+# Documentation snippets are aligned for readability; do not reformat them.
+extend-exclude = ["docs", "README.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "PTH"]
+ignore = [
+  "E501",   # line length is handled by the formatter
+  "UP006",  # keep typing.List/Dict in a few public signatures for 3.9 docs
+  "UP035",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+# Recent mypy releases no longer accept 3.9 as a target; Ruff enforces 3.9 syntax.
+python_version = "3.10"
+packages = ["captcha_forge"]
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true
+ignore_missing_imports = true
